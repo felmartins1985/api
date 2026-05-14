@@ -21,6 +21,7 @@ import { Role } from 'src/enums/role.enum';
 import { RoleGuard } from 'src/guards/role.guard';
 import { AuthGuard } from 'src/guards/auth.guard';
 
+// a ordem dos guards é importante, AuthGuard deve ser o primeiro para garantir que o usuário esteja autenticado antes de verificar os roles.
 @UseGuards(AuthGuard, RoleGuard)
 @Controller('users')
 export class UserController {
@@ -32,7 +33,7 @@ export class UserController {
     return this.userService.create(body);
   }
 
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.USER)
   @Get()
   async list(): Promise<User[]> {
     return this.userService.list();
