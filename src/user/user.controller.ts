@@ -27,7 +27,7 @@ import { AuthGuard } from 'src/guards/auth.guard';
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @UseInterceptors(LogInterceptor)
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.USER)
   @Post()
   async create(@Body() body: CreateUserDto): Promise<User> {
     return this.userService.create(body);
