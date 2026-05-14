@@ -3,12 +3,10 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
-  ParseIntPipe,
   Patch,
   Post,
   Put,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePutUserDto } from './dto/update-put-user.dto';
@@ -16,6 +14,7 @@ import { UpdatePatchUserDto } from './dto/update-patch-user.dto';
 import { UserService } from './user.service';
 import { User } from 'generated/prisma/client';
 import { LogInterceptor } from 'src/interceptors/log.interceptor';
+import { ParamId } from 'src/decorators/param-id.decorator';
 
 @Controller('users')
 export class UserController {
@@ -32,28 +31,25 @@ export class UserController {
   }
 
   @Get(':id')
-  async show(@Param('id', ParseIntPipe) id: number) {
+  async show(@ParamId() id: number) {
     return this.userService.show(id);
   }
 
   @Put(':id')
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @ParamId() id: number,
     @Body() { email, name, password }: UpdatePutUserDto,
   ) {
     return this.userService.update(id, { email, name, password });
   }
 
   @Patch(':id')
-  async updatePartial(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() data: UpdatePatchUserDto,
-  ) {
+  async updatePartial(@ParamId() id: number, @Body() data: UpdatePatchUserDto) {
     return this.userService.updatePartial(id, data);
   }
 
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number) {
+  async delete(@ParamId() id: number) {
     return this.userService.delete(id);
   }
 }
