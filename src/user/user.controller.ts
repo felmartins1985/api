@@ -20,6 +20,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { RoleGuard } from 'src/guards/role.guard';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 
 // a ordem dos guards é importante, AuthGuard deve ser o primeiro para garantir que o usuário esteja autenticado antes de verificar os roles.
 @UseGuards(AuthGuard, RoleGuard)
@@ -33,6 +34,7 @@ export class UserController {
     return this.userService.create(body);
   }
 
+  @SkipThrottle()
   @Roles(Role.ADMIN, Role.USER)
   @Get()
   async list(): Promise<User[]> {
