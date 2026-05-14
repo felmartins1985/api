@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,26 +16,35 @@ import { UserService } from './user.service';
 import { User } from 'generated/prisma/client';
 import { LogInterceptor } from 'src/interceptors/log.interceptor';
 import { ParamId } from 'src/decorators/param-id.decorator';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/enums/role.enum';
+import { RoleGuard } from 'src/guards/role.guard';
+import { AuthGuard } from 'src/guards/auth.guard';
 
+@UseGuards(AuthGuard, RoleGuard)
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @UseInterceptors(LogInterceptor)
+  @Roles(Role.ADMIN)
   @Post()
   async create(@Body() body: CreateUserDto): Promise<User> {
     return this.userService.create(body);
   }
 
+  @Roles(Role.ADMIN)
   @Get()
   async list(): Promise<User[]> {
     return this.userService.list();
   }
 
+  @Roles(Role.ADMIN)
   @Get(':id')
   async show(@ParamId() id: number) {
     return this.userService.show(id);
   }
 
+  @Roles(Role.ADMIN)
   @Put(':id')
   async update(
     @ParamId() id: number,
@@ -42,12 +52,13 @@ export class UserController {
   ) {
     return this.userService.update(id, { email, name, password });
   }
-
+  @Roles(Role.ADMIN)
   @Patch(':id')
   async updatePartial(@ParamId() id: number, @Body() data: UpdatePatchUserDto) {
     return this.userService.updatePartial(id, data);
   }
 
+  @Roles(Role.ADMIN)
   @Delete(':id')
   async delete(@ParamId() id: number) {
     return this.userService.delete(id);
