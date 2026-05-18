@@ -14,13 +14,14 @@ import { UpdatePutUserDto } from './dto/update-put-user.dto';
 import { UpdatePatchUserDto } from './dto/update-patch-user.dto';
 import { UserService } from './user.service';
 import { User } from 'generated/prisma/client';
-import { LogInterceptor } from 'src/interceptors/log.interceptor';
-import { ParamId } from 'src/decorators/param-id.decorator';
-import { Roles } from 'src/decorators/roles.decorator';
-import { Role } from 'src/enums/role.enum';
-import { RoleGuard } from 'src/guards/role.guard';
-import { AuthGuard } from 'src/guards/auth.guard';
-import { SkipThrottle, Throttle } from '@nestjs/throttler';
+
+import { SkipThrottle } from '@nestjs/throttler';
+import { AuthGuard } from '../guards/auth.guard';
+import { RoleGuard } from '../guards/role.guard';
+import { LogInterceptor } from '../interceptors/log.interceptor';
+import { Role } from '../enums/role.enum';
+import { Roles } from '../decorators/roles.decorator';
+import { ParamId } from '../decorators/param-id.decorator';
 
 // a ordem dos guards é importante, AuthGuard deve ser o primeiro para garantir que o usuário esteja autenticado antes de verificar os roles.
 @UseGuards(AuthGuard, RoleGuard)
