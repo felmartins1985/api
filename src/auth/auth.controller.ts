@@ -72,20 +72,15 @@ export class AuthController {
       new ParseFilePipe({
         validators: [
           new FileTypeValidator({ fileType: 'image/png' }),
-          new MaxFileSizeValidator({ maxSize: 1024 * 1024 }),
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 1024 }),
         ],
       }),
     )
     photo: Express.Multer.File,
   ) {
-    const path = join(
-      process.cwd(),
-      'storage',
-      'photos',
-      `photo-${user.id}.png`,
-    );
+    const fileName = `photo-${user.id}.png`;
     try {
-      await this.fileService.upload(photo, path);
+      await this.fileService.upload(photo, fileName);
     } catch (e) {
       throw new BadRequestException(e);
     }
