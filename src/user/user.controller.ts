@@ -36,7 +36,7 @@ export class UserController {
   }
 
   @SkipThrottle()
-  @Roles(Role.ADMIN, Role.USER)
+  @Roles(Role.ADMIN)
   @Get()
   async list(): Promise<User[]> {
     return this.userService.list();
