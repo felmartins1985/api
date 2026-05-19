@@ -6,7 +6,7 @@ import { ROLES_KEY } from '../decorators/roles.decorator';
 @Injectable()
 export class RoleGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
-  async canActivate(context: ExecutionContext) {
+  canActivate(context: ExecutionContext) {
     // Busca os roles definidos via @Roles() no método ou na classe (método tem prioridade).
     // getAllAndOverride percorre os targets em ordem e retorna o primeiro valor não-undefined.
     const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
@@ -17,9 +17,8 @@ export class RoleGuard implements CanActivate {
       return true;
     }
     const { user } = context.switchToHttp().getRequest();
-    console.log('user', user);
     const rolesFilted = requiredRoles.filter(
-      (role) => role === Number(user.role),
+      (role) => role === (user.role as Role),
     );
     return rolesFilted.length > 0;
   }

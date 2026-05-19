@@ -16,6 +16,7 @@ export class AuthGuard implements CanActivate {
       request.tokenPayload = data;
       request.user = await this.userService.show(data.id);
       return true;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       return false;
     }

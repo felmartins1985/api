@@ -58,7 +58,7 @@ describe('AppController (e2e)', () => {
       .send();
     expect(response.statusCode).toEqual(201);
     expect(typeof response.body.id).toBe('number');
-    expect(response.body.role).toEqual(String(Role.USER));
+    expect(Number(response.body.role)).toEqual(Role.USER);
     userId = response.body.id;
   });
   it('registrar um novo usuario como administrador', async () => {
@@ -80,7 +80,7 @@ describe('AppController (e2e)', () => {
       .send();
     expect(response.statusCode).toEqual(201);
     expect(typeof response.body.id).toBe('number');
-    expect(response.body.role).toEqual(String(Role.USER));
+    expect(Number(response.body.role)).toEqual(Role.USER);
     userId = response.body.id;
   });
   it('tentar ver a lista de todos os usuarios', async () => {
@@ -103,7 +103,11 @@ describe('AppController (e2e)', () => {
     console.log('rows=========>', rows);
     await data.destroy();
     expect(rows.length).toEqual(1);
-    expect(rows[0].role).toEqual(String(Role.ADMIN));
+    expect(Number(rows[0].role)).toEqual(Role.ADMIN);
+    const loginResponse = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email: 'admin@example.com', password: authRegisterDTO.password });
+    accessToken = loginResponse.body.accessToken;
   });
   it('tentar ver a lista de todos os usuarios, agora com acesso', async () => {
     const response = await request(app.getHttpServer())
