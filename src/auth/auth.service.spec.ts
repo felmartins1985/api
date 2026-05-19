@@ -51,7 +51,7 @@ describe('AuthService', () => {
     });
     test('method forget', async () => {
       const result = await authService.forget('johndoe@example.com');
-      expect(result).toBe(true);
+      expect(result).toEqual({ success: true }); 
     });
     test('method reset', async () => {
       const result = await authService.reset('A@134b', resetToken);
